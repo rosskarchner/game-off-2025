@@ -71,7 +71,7 @@ shape = SubResource("RectangleShape2D_rwgxs")
 texture = SubResource("PlaceholderTexture2D_4wyf3")
 
 [node name="Platform4" type="CharacterBody2D" parent="."]
-position = Vector2(1063, 533)
+position = Vector2(1063, 540)
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4"]

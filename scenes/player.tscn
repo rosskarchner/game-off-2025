@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://7s2njiex250w"]
+[gd_scene load_steps=5 format=3 uid="uid://7s2njiex250w"]
 
 [ext_resource type="Script" uid="uid://ca50k4btmq8wk" path="res://scenes/player.gd" id="1_3vyb7"]
 [ext_resource type="Texture2D" uid="uid://b4ecd0limj3vg" path="res://art/placeholder.png" id="2_g2els"]
+[ext_resource type="Script" path="res://scenes/wrapping_controller.gd" id="3_wrapping"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3vyb7"]
 size = Vector2(60, 20)
@@ -21,15 +22,5 @@ texture = ExtResource("2_g2els")
 position = Vector2(-2, -5)
 shape = SubResource("RectangleShape2D_3vyb7")
 
-[node name="Node2D" type="Node2D" parent="."]
-
-[node name="RightVisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="Node2D"]
-position = Vector2(17, -5)
-rect = Rect2(8, -10, 2, 20)
-
-[node name="LeftVisibleOnScreenNotifier2D2" type="VisibleOnScreenNotifier2D" parent="Node2D"]
-position = Vector2(-32, -5)
-rect = Rect2(0, -10, 3, 20)
-
-[connection signal="screen_exited" from="Node2D/RightVisibleOnScreenNotifier2D" to="." method="_on_right_visible_on_screen_notifier_2d_screen_exited"]
-[connection signal="screen_exited" from="Node2D/LeftVisibleOnScreenNotifier2D2" to="." method="_on_left_visible_on_screen_notifier_2d_2_screen_exited"]
+[node name="WrappingController" type="Node2D" parent="."]
+script = ExtResource("3_wrapping")
