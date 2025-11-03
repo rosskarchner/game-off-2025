@@ -1,0 +1,81 @@
+[gd_scene load_steps=6 format=3 uid="uid://oth21bhiydlu"]
+
+[ext_resource type="PackedScene" uid="uid://7s2njiex250w" path="res://scenes/player.tscn" id="1_nnsk1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nnsk1"]
+size = Vector2(1576, 18)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nnsk1"]
+size = Vector2(1152, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rwgxs"]
+size = Vector2(180, 20)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_4wyf3"]
+size = Vector2(180, 20)
+
+[node name="World" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_nnsk1")]
+position = Vector2(573, 339)
+
+[node name="Floor" type="CharacterBody2D" parent="."]
+position = Vector2(-1, 647)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+position = Vector2(572, 9)
+shape = SubResource("RectangleShape2D_nnsk1")
+
+[node name="Sprite2D" type="Sprite2D" parent="Floor"]
+texture = SubResource("PlaceholderTexture2D_nnsk1")
+centered = false
+
+[node name="Platform" type="CharacterBody2D" parent="."]
+position = Vector2(577, 391)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
+shape = SubResource("RectangleShape2D_rwgxs")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform"]
+texture = SubResource("PlaceholderTexture2D_4wyf3")
+
+[node name="Platform2" type="CharacterBody2D" parent="."]
+position = Vector2(85, 540)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
+shape = SubResource("RectangleShape2D_rwgxs")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform2"]
+texture = SubResource("PlaceholderTexture2D_4wyf3")
+
+[node name="Platform3" type="CharacterBody2D" parent="."]
+position = Vector2(85, 147)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
+shape = SubResource("RectangleShape2D_rwgxs")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform3"]
+texture = SubResource("PlaceholderTexture2D_4wyf3")
+
+[node name="Platform5" type="CharacterBody2D" parent="."]
+position = Vector2(1065, 147)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform5"]
+shape = SubResource("RectangleShape2D_rwgxs")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform5"]
+texture = SubResource("PlaceholderTexture2D_4wyf3")
+
+[node name="Platform4" type="CharacterBody2D" parent="."]
+position = Vector2(1063, 533)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4"]
+shape = SubResource("RectangleShape2D_rwgxs")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform4"]
+texture = SubResource("PlaceholderTexture2D_4wyf3")
