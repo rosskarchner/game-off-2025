@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3ppy6ui8tqnp"]
+
+[ext_resource type="Texture2D" uid="uid://ct5bcx0coxxsh" path="res://art/placeholder-mob.png" id="1_4are2"]
+[ext_resource type="Script" uid="uid://crlw6apyd75s0" path="res://scenes/mob.gd" id="1_bsing"]
+[ext_resource type="Script" uid="uid://bs63lc3465t34" path="res://scenes/wrapping_controller.gd" id="3_d4cuo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4wyf3"]
+size = Vector2(60, 20)
+
+[node name="Mob" type="CharacterBody2D"]
+script = ExtResource("1_bsing")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-2, -4)
+texture = ExtResource("1_4are2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-4, -9)
+shape = SubResource("RectangleShape2D_4wyf3")
+
+[node name="WrappingController" type="Node2D" parent="."]
+script = ExtResource("3_d4cuo")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.11
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="check_flap"]
