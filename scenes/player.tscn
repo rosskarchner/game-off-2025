@@ -1,24 +1,72 @@
-[gd_scene load_steps=7 format=3 uid="uid://7s2njiex250w"]
+[gd_scene load_steps=9 format=3 uid="uid://7s2njiex250w"]
 
 [ext_resource type="Script" uid="uid://ca50k4btmq8wk" path="res://scenes/player.gd" id="1_3vyb7"]
 [ext_resource type="Texture2D" uid="uid://bxyfo2i3mydcd" path="res://art/player-flying_0001.png" id="3_dqkch"]
 [ext_resource type="Script" uid="uid://bs63lc3465t34" path="res://scenes/wrapping_controller.gd" id="3_wrapping"]
 [ext_resource type="Texture2D" uid="uid://2dbo4cu0jjb4" path="res://art/player-flying_0002.png" id="4_qlg0r"]
+[ext_resource type="Texture2D" uid="uid://c1fcwe34jbq0o" path="res://art/player-walking_0002.png" id="4_tuyoq"]
+[ext_resource type="Texture2D" uid="uid://ca8axwbelgiy7" path="res://art/player-walking_0001.png" id="6_fjrip"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3vyb7"]
-size = Vector2(60, 20)
+size = Vector2(70, 55)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tuyoq"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_qlg0r")
+}],
+"loop": true,
+"name": &"airborne-falling",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_dqkch")
+}],
+"loop": true,
+"name": &"airborne-moving",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_dqkch")
+}],
+"loop": true,
+"name": &"airborne-still",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("3_dqkch")
 }, {
 "duration": 1.0,
 "texture": ExtResource("4_qlg0r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_dqkch")
+}],
+"loop": false,
+"name": &"flap",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_tuyoq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_fjrip")
 }],
 "loop": true,
-"name": &"flying",
+"name": &"grounded-moving",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_tuyoq")
+}],
+"loop": true,
+"name": &"grounded-still",
 "speed": 5.0
 }]
 
@@ -30,16 +78,22 @@ limit_left = 0
 limit_right = 1152
 limit_bottom = 648
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-2, -5)
-shape = SubResource("RectangleShape2D_3vyb7")
-
 [node name="WrappingController" type="Node2D" parent="."]
 script = ExtResource("3_wrapping")
+
+[node name="BodyCollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(6.0000005, 12.5)
+shape = SubResource("RectangleShape2D_3vyb7")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-4.9999995, -5.9999995)
 scale = Vector2(0.74, 0.74)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"flying"
-frame_progress = 0.5778236
+animation = &"flap"
+
+[node name="GroundDetector" type="RayCast2D" parent="."]
+target_position = Vector2(0, 55)
+
+[node name="JumpCooldownTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true

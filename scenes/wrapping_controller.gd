@@ -1,5 +1,5 @@
 extends Node2D
-## WrappingController handles screen wrapping for any Node2D with a Sprite2D
+## WrappingController handles screen wrapping for any Node2D with a Sprite2D or AnimatedSprite2D
 ## Add this as a child to any node that needs wrap-around functionality
 
 class_name WrappingController
@@ -7,16 +7,21 @@ class_name WrappingController
 @export var world_width: float = 1152.0
 @export var show_doppelganger_threshold: float = 200.0  ## Distance from edge to show doppelganger
 
-var doppelganger: Sprite2D
-var parent_sprite: Sprite2D
+var doppelganger: Node2D
+var parent_sprite: Node2D
+var is_animated: bool = false
 
 
 func _ready() -> void:
-	# Get reference to parent's sprite
+	# Get reference to parent's sprite (try Sprite2D first, then AnimatedSprite2D)
 	parent_sprite = get_parent().find_child("Sprite2D", true, false)
 
 	if not parent_sprite:
-		push_warning("WrappingController: No Sprite2D found on parent node")
+		parent_sprite = get_parent().find_child("AnimatedSprite2D", true, false)
+		is_animated = true
+
+	if not parent_sprite:
+		push_warning("WrappingController: No Sprite2D or AnimatedSprite2D found on parent node")
 		return
 
 	# Create doppelganger sprite
@@ -35,8 +40,19 @@ func _process(delta: float) -> void:
 
 
 func _create_doppelganger() -> void:
-	doppelganger = Sprite2D.new()
-	doppelganger.texture = parent_sprite.texture
+	if is_animated:
+		var animated = parent_sprite as AnimatedSprite2D
+		var new_doppelganger = AnimatedSprite2D.new()
+		new_doppelganger.sprite_frames = animated.sprite_frames
+		new_doppelganger.animation = animated.animation
+		new_doppelganger.frame = animated.frame
+		doppelganger = new_doppelganger
+	else:
+		var sprite = parent_sprite as Sprite2D
+		var new_doppelganger = Sprite2D.new()
+		new_doppelganger.texture = sprite.texture
+		doppelganger = new_doppelganger
+
 	doppelganger.flip_h = parent_sprite.flip_h
 	doppelganger.flip_v = parent_sprite.flip_v
 	doppelganger.scale = parent_sprite.scale
@@ -52,10 +68,21 @@ func _update_doppelganger() -> void:
 	var parent_global_x = parent.global_position.x
 
 	# Sync sprite properties
-	doppelganger.texture = parent_sprite.texture
 	doppelganger.flip_h = parent_sprite.flip_h
 	doppelganger.flip_v = parent_sprite.flip_v
 	doppelganger.scale = parent_sprite.scale
+
+	# Sync animation-specific properties if animated
+	if is_animated:
+		var parent_animated = parent_sprite as AnimatedSprite2D
+		var doppelganger_animated = doppelganger as AnimatedSprite2D
+		doppelganger_animated.animation = parent_animated.animation
+		doppelganger_animated.frame = parent_animated.frame
+		doppelganger_animated.speed_scale = parent_animated.speed_scale
+	else:
+		var parent_sprite2d = parent_sprite as Sprite2D
+		var doppelganger_sprite2d = doppelganger as Sprite2D
+		doppelganger_sprite2d.texture = parent_sprite2d.texture
 
 	# Position doppelganger on the opposite side
 	# Determine which side of screen we're closer to
