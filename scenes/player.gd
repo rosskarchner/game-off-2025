@@ -1,12 +1,12 @@
 extends CharacterBody2D
 enum FacingDirections {Right,Left}
 
-@onready var sprite_2d: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 const SPEED = 550.0
 const JUMP_VELOCITY = -450.0
 
-var facing: FacingDirections = FacingDirections.Right
+var facing: FacingDirections = FacingDirections.Left
 var last_direction:float=0.0
 
 func _physics_process(delta: float) -> void:
@@ -24,7 +24,7 @@ func _physics_process(delta: float) -> void:
 	if direction:
 		last_direction  = direction
 		velocity.x = direction * SPEED
-		sprite_2d.flip_h = velocity.x < 0
+		sprite.flip_h = velocity.x > 0
 		if direction > 0:
 			facing = FacingDirections.Right
 		else:
