@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://7s2njiex250w"]
+[gd_scene load_steps=11 format=3 uid="uid://7s2njiex250w"]
 
 [ext_resource type="Script" uid="uid://ca50k4btmq8wk" path="res://scenes/player.gd" id="1_3vyb7"]
 [ext_resource type="Texture2D" uid="uid://bxyfo2i3mydcd" path="res://art/player-flying_0001.png" id="3_dqkch"]
@@ -38,9 +38,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_dqkch")
-}, {
-"duration": 1.0,
 "texture": ExtResource("4_qlg0r")
 }, {
 "duration": 1.0,
@@ -70,7 +67,14 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
+size = Vector2(78, 17)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fjrip"]
+size = Vector2(39, 13.5)
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_layer = 2
 script = ExtResource("1_3vyb7")
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -97,3 +101,22 @@ target_position = Vector2(0, 55)
 [node name="JumpCooldownTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="BonkedDetector" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BonkedDetector"]
+position = Vector2(4, -25.5)
+shape = SubResource("RectangleShape2D_tuyoq")
+
+[node name="BonkingDetector" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BonkingDetector"]
+position = Vector2(0.5, 8.25)
+shape = SubResource("RectangleShape2D_fjrip")
+
+[connection signal="area_entered" from="BonkedDetector" to="." method="_on_bonked_detector_area_entered"]
+[connection signal="area_entered" from="BonkingDetector" to="." method="_on_bonking_detector_area_entered"]

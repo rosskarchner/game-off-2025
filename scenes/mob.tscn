@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3ppy6ui8tqnp"]
+[gd_scene load_steps=7 format=3 uid="uid://b3ppy6ui8tqnp"]
 
 [ext_resource type="Texture2D" uid="uid://ct5bcx0coxxsh" path="res://art/placeholder-mob.png" id="1_4are2"]
 [ext_resource type="Script" uid="uid://crlw6apyd75s0" path="res://scenes/mob.gd" id="1_bsing"]
@@ -7,7 +7,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4wyf3"]
 size = Vector2(60, 20)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d4cuo"]
+size = Vector2(53, 5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_71rcx"]
+size = Vector2(53, 5)
+
 [node name="Mob" type="CharacterBody2D"]
+collision_layer = 8
 script = ExtResource("1_bsing")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -21,8 +28,31 @@ shape = SubResource("RectangleShape2D_4wyf3")
 [node name="WrappingController" type="Node2D" parent="."]
 script = ExtResource("3_d4cuo")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="FlapTimer" type="Timer" parent="."]
 wait_time = 0.11
 autostart = true
 
-[connection signal="timeout" from="Timer" to="." method="check_flap"]
+[node name="BonkedDetector" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BonkedDetector"]
+position = Vector2(-5.5, -19.5)
+shape = SubResource("RectangleShape2D_d4cuo")
+
+[node name="BonkingDetector" type="Area2D" parent="."]
+collision_layer = 256
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BonkingDetector"]
+position = Vector2(-5, 1)
+shape = SubResource("RectangleShape2D_71rcx")
+
+[node name="EvaluatePlayerPosition" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="FlapTimer" to="." method="check_flap"]
+[connection signal="area_entered" from="BonkedDetector" to="." method="_on_bonk_detector_area_entered"]
+[connection signal="area_entered" from="BonkingDetector" to="." method="_on_bonk_detector_area_entered"]
+[connection signal="timeout" from="EvaluatePlayerPosition" to="." method="_on_evaluate_player_position_timeout"]

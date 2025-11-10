@@ -33,6 +33,7 @@ centered = false
 
 [node name="Platform" type="CharacterBody2D" parent="."]
 position = Vector2(577, 391)
+collision_mask = 10
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
@@ -43,6 +44,7 @@ texture = SubResource("PlaceholderTexture2D_4wyf3")
 
 [node name="Platform2" type="CharacterBody2D" parent="."]
 position = Vector2(85, 540)
+collision_mask = 10
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
@@ -53,6 +55,7 @@ texture = SubResource("PlaceholderTexture2D_4wyf3")
 
 [node name="Platform3" type="CharacterBody2D" parent="."]
 position = Vector2(85, 147)
+collision_mask = 10
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
@@ -63,6 +66,7 @@ texture = SubResource("PlaceholderTexture2D_4wyf3")
 
 [node name="Platform5" type="CharacterBody2D" parent="."]
 position = Vector2(1065, 147)
+collision_mask = 10
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform5"]
@@ -73,6 +77,7 @@ texture = SubResource("PlaceholderTexture2D_4wyf3")
 
 [node name="Platform4" type="CharacterBody2D" parent="."]
 position = Vector2(1063, 540)
+collision_mask = 10
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4"]
