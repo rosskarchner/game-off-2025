@@ -57,7 +57,10 @@ func _on_bonk_detector_area_entered(_area: Area2D) -> void:
 func _on_evaluate_player_position_timeout() -> void:
 	var player_distance = global_position.distance_to(player.global_position)
 	if player_distance < 300:
-		baseline_height = player.global_position.y -150
+		if global_position.y > player.global_position.y:
+			baseline_height -= 100
+		else:
+			baseline_height +=100
 		if global_position.x > player.global_position.x:
 			facing = FacingDirections.Left
 		else:
