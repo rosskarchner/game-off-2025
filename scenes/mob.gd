@@ -1,7 +1,8 @@
 extends CharacterBody2D
 enum FacingDirections {Right,Left}
 
-@onready var sprite_2d: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 
 const SPEED = 400.0
 const JUMP_VELOCITY = -550.0
@@ -38,7 +39,7 @@ func _physics_process(delta: float) -> void:
 		
 
 	velocity.x = (direction * SPEED).x
-	sprite_2d.flip_h = velocity.x < 0
+	sprite.flip_h = velocity.x > 0
 
 
 	if is_on_floor():
@@ -58,9 +59,9 @@ func _on_evaluate_player_position_timeout() -> void:
 	var player_distance = global_position.distance_to(player.global_position)
 	if player_distance < 300:
 		if global_position.y > player.global_position.y:
-			baseline_height -= 100
+			baseline_height -= 50
 		else:
-			baseline_height +=100
+			baseline_height +=50
 		if global_position.x > player.global_position.x:
 			facing = FacingDirections.Left
 		else:

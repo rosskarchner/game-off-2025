@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://ca8axwbelgiy7" path="res://art/player-walking_0001.png" id="6_fjrip"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3vyb7"]
-size = Vector2(70, 55)
+size = Vector2(79, 76)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tuyoq"]
 animations = [{
@@ -86,7 +86,7 @@ limit_bottom = 648
 script = ExtResource("3_wrapping")
 
 [node name="BodyCollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(6.0000005, 12.5)
+position = Vector2(1.5000005, 2)
 shape = SubResource("RectangleShape2D_3vyb7")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
