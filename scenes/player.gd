@@ -6,11 +6,17 @@ enum FacingDirections {Right,Left}
 @onready var flap_cooldown_timer: Timer = $JumpCooldownTimer
 
 ## Arcade Joust-style constants
-const FORWARD_SPEED = 300.0  ## Constant horizontal movement speed
 const FLAP_FORCE = -600.0    ## Upward thrust per flap
 const MAX_FALL_SPEED = 600.0 ## Terminal velocity while falling
 const GRAVITY_SCALE = 1.8    ## Makes gravity feel heavier/more pressing
 const FLAP_COOLDOWN = 0.15   ## Min time between flaps (prevents spam)
+
+## Horizontal Movement Constants
+const MAX_SPEED = 400.0      ## Maximum horizontal speed
+const RUN_ACCEL = 1000.0     ## Acceleration on ground
+const RUN_DECEL = 800.0      ## Friction on ground
+const AIR_ACCEL = 600.0      ## Acceleration in air (less control)
+const AIR_DECEL = 200.0      ## Air resistance (gliding feel)
 
 var facing: FacingDirections = FacingDirections.Right
 var last_direction: float = 1.0
@@ -50,18 +56,23 @@ func _physics_process(delta: float) -> void:
 		flap_cooldown_timer.start()
 		sprite.play("flap")
 
-	# Constant forward movement in current facing direction
-	var direction_multiplier = 1.0 if facing == FacingDirections.Right else -1.0
-	velocity.x = FORWARD_SPEED * direction_multiplier
+	# Horizontal Movement (Joust-style inertia)
+	var target_direction = Input.get_axis("ui_left", "ui_right")
+	
+	# Determine acceleration/deceleration based on state
+	var accel = RUN_ACCEL if grounded else AIR_ACCEL
+	var decel = RUN_DECEL if grounded else AIR_DECEL
+	
+	if target_direction:
+		# Accelerate towards target direction
+		velocity.x = move_toward(velocity.x, target_direction * MAX_SPEED, accel * delta)
+		facing = FacingDirections.Right if target_direction > 0 else FacingDirections.Left
+	else:
+		# Decelerate (friction/air resistance)
+		velocity.x = move_toward(velocity.x, 0, decel * delta)
+
 	sprite.flip_h = facing == FacingDirections.Right
-
-	# Handle direction toggle with left/right input
-	if Input.is_action_just_pressed("ui_left"):
-		facing = FacingDirections.Left
-	elif Input.is_action_just_pressed("ui_right"):
-		facing = FacingDirections.Right
-
-	moving = true  ## Always moving forward
+	moving = abs(velocity.x) > 10.0 # Consider moving if speed is significant
 
 	move_and_slide()
 
