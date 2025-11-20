@@ -15,6 +15,10 @@ run/main_scene="uid://oth21bhiydlu"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/mcp_server/plugin.cfg")
+
 [layer_names]
 
 2d_physics/layer_1="STATIC"
