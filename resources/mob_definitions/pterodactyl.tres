@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MobDefinition" load_steps=2 format=3 uid="uid://bmmd1uift24n0"]
+
+[ext_resource type="Script" uid="uid://cngnw55hawwnb" path="res://resources/mob_definition.gd" id="1_5wv1n"]
+
+[resource]
+script = ExtResource("1_5wv1n")
+mob_name = "Pterodactyl"

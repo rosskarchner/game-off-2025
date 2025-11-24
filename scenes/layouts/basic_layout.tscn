@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3 uid="uid://qkslqqvhe0s0"]
+
+[ext_resource type="PackedScene" uid="uid://b3ppy6ui8tqnp" path="res://scenes/mob.tscn" id="1_p72y3"]
+[ext_resource type="Resource" uid="uid://d31jmijj84pbp" path="res://resources/mob_definitions/shadow_aggressive.tres" id="2_ibx0h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y6blw"]
+size = Vector2(180, 20)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_hu0ai"]
+size = Vector2(180, 20)
+
+[node name="BasicLayout" type="Node2D"]
+
+[node name="Platform" type="CharacterBody2D" parent="."]
+position = Vector2(577, 391)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
+shape = SubResource("RectangleShape2D_y6blw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform"]
+texture = SubResource("PlaceholderTexture2D_hu0ai")
+
+[node name="Platform2" type="CharacterBody2D" parent="."]
+position = Vector2(85, 540)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
+shape = SubResource("RectangleShape2D_y6blw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform2"]
+texture = SubResource("PlaceholderTexture2D_hu0ai")
+
+[node name="Platform3" type="CharacterBody2D" parent="."]
+position = Vector2(85, 147)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
+shape = SubResource("RectangleShape2D_y6blw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform3"]
+texture = SubResource("PlaceholderTexture2D_hu0ai")
+
+[node name="Platform5" type="CharacterBody2D" parent="."]
+position = Vector2(1065, 147)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform5"]
+shape = SubResource("RectangleShape2D_y6blw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform5"]
+texture = SubResource("PlaceholderTexture2D_hu0ai")
+
+[node name="Platform4" type="CharacterBody2D" parent="."]
+position = Vector2(1063, 540)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4"]
+shape = SubResource("RectangleShape2D_y6blw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform4"]
+texture = SubResource("PlaceholderTexture2D_hu0ai")
+
+[node name="Mob" parent="." instance=ExtResource("1_p72y3")]
+mob_definition = ExtResource("2_ibx0h")

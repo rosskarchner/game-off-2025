@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1ineqws2nsf8"]
+
+[ext_resource type="Script" uid="uid://cl0el5uwlrpiw" path="res://scenes/moving_gap.gd" id="1_cmnea"]
+
+[sub_resource type="Curve2D" id="Curve2D_640d7"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 146, 12, 0, 0, 0, 0, 791, 12)
+}
+point_count = 2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cmnea"]
+size = Vector2(791, 20)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_f1jyf"]
+size = Vector2(800, 20)
+
+[node name="MovingGap" type="Path2D"]
+curve = SubResource("Curve2D_640d7")
+script = ExtResource("1_cmnea")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(146, 12)
+rotates = false
+
+[node name="Platform2" type="CharacterBody2D" parent="PathFollow2D"]
+position = Vector2(654, 8)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PathFollow2D/Platform2"]
+shape = SubResource("RectangleShape2D_cmnea")
+
+[node name="Sprite2D" type="Sprite2D" parent="PathFollow2D/Platform2"]
+texture = SubResource("PlaceholderTexture2D_f1jyf")
+
+[node name="Platform3" type="CharacterBody2D" parent="PathFollow2D"]
+position = Vector2(-398, 3)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PathFollow2D/Platform3"]
+shape = SubResource("RectangleShape2D_cmnea")
+
+[node name="Sprite2D" type="Sprite2D" parent="PathFollow2D/Platform3"]
+texture = SubResource("PlaceholderTexture2D_f1jyf")

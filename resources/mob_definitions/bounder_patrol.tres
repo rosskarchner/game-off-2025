@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MobDefinition" load_steps=2 format=3 uid="uid://wpxkrl6y4y8a"]
+
+[ext_resource type="Script" uid="uid://cngnw55hawwnb" path="res://resources/mob_definition.gd" id="1_r33rh"]
+
+[resource]
+script = ExtResource("1_r33rh")
+mob_name = "Bounder"

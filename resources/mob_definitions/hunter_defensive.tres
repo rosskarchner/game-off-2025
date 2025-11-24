@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MobDefinition" load_steps=2 format=3 uid="uid://60cykmnfvtmj"]
+
+[ext_resource type="Script" uid="uid://cngnw55hawwnb" path="res://resources/mob_definition.gd" id="1_kj6wk"]
+
+[resource]
+script = ExtResource("1_kj6wk")
+mob_name = "Hunter"

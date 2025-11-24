@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://b3ppy6ui8tqnp"]
+[gd_scene load_steps=10 format=3 uid="uid://b3ppy6ui8tqnp"]
 
 [ext_resource type="Script" uid="uid://crlw6apyd75s0" path="res://scenes/mob.gd" id="1_bsing"]
 [ext_resource type="Texture2D" uid="uid://dwkras5w4diu5" path="res://art/gull-flying_0001.png" id="2_71rcx"]
 [ext_resource type="Script" uid="uid://bs63lc3465t34" path="res://scenes/wrapping_controller.gd" id="3_d4cuo"]
 [ext_resource type="Texture2D" uid="uid://ceoq45pd724bx" path="res://art/gull-flying_0002.png" id="3_xsfyf"]
+[ext_resource type="Resource" uid="uid://cmc44xuce4u8o" path="res://resources/mob_definitions/gull_simple.tres" id="5_gull"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_h8ps3"]
 animations = [{
@@ -26,11 +27,12 @@ size = Vector2(61.5, 33)
 size = Vector2(24.5, 11.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_71rcx"]
-size = Vector2(53, 5)
+size = Vector2(30, 5)
 
 [node name="Mob" type="CharacterBody2D"]
 collision_layer = 8
 script = ExtResource("1_bsing")
+mob_definition = ExtResource("5_gull")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.5, 0.5)
@@ -60,14 +62,12 @@ collision_layer = 256
 collision_mask = 128
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BonkingDetector"]
-position = Vector2(-3, 19)
+position = Vector2(-2, 19)
 shape = SubResource("RectangleShape2D_71rcx")
 
 [node name="EvaluatePlayerPosition" type="Timer" parent="."]
 wait_time = 1.5
 autostart = true
 
-[connection signal="timeout" from="FlapTimer" to="." method="check_flap"]
 [connection signal="area_entered" from="BonkedDetector" to="." method="_on_bonk_detector_area_entered"]
-[connection signal="area_entered" from="BonkingDetector" to="." method="_on_bonk_detector_area_entered"]
 [connection signal="timeout" from="EvaluatePlayerPosition" to="." method="_on_evaluate_player_position_timeout"]

@@ -15,9 +15,17 @@ run/main_scene="uid://oth21bhiydlu"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+MobDefinitionGenerator="res://mob_definition_autoload.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/mcp_server/plugin.cfg")
+
+[global_group]
+
+world=""
 
 [layer_names]
 

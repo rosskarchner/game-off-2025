@@ -68,7 +68,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
-size = Vector2(78, 17)
+size = Vector2(35, 17)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fjrip"]
 size = Vector2(39, 13.5)
@@ -104,10 +104,10 @@ one_shot = true
 
 [node name="BonkedDetector" type="Area2D" parent="."]
 collision_layer = 128
-collision_mask = 64
+collision_mask = 256
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BonkedDetector"]
-position = Vector2(4, -25.5)
+position = Vector2(-24.5, -30)
 shape = SubResource("RectangleShape2D_tuyoq")
 
 [node name="BonkingDetector" type="Area2D" parent="."]
@@ -115,7 +115,7 @@ collision_layer = 64
 collision_mask = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BonkingDetector"]
-position = Vector2(0.5, 8.25)
+position = Vector2(3, 11)
 shape = SubResource("RectangleShape2D_fjrip")
 
 [connection signal="area_entered" from="BonkedDetector" to="." method="_on_bonked_detector_area_entered"]

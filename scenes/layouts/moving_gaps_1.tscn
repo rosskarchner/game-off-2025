@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfc71534k1rg1"]
+
+[ext_resource type="PackedScene" uid="uid://c1ineqws2nsf8" path="res://scenes/moving_gap.tscn" id="1_f40or"]
+
+[node name="MovingGaps1" type="Node2D"]
+
+[node name="MovingGap" parent="." instance=ExtResource("1_f40or")]
+position = Vector2(12, 84)

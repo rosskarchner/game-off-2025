@@ -1,0 +1,74 @@
+[gd_scene load_steps=6 format=3 uid="uid://rnnfemnrrah6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hxt8g"]
+size = Vector2(791, 20)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_0v8qu"]
+size = Vector2(800, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0v8qu"]
+size = Vector2(791, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3fbp7"]
+size = Vector2(20, 147)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_3fbp7"]
+size = Vector2(20, 150)
+
+[node name="3-tier maze" type="Node2D"]
+
+[node name="Platform" type="CharacterBody2D" parent="."]
+position = Vector2(397, 600)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_hxt8g")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform"]
+texture = SubResource("PlaceholderTexture2D_0v8qu")
+
+[node name="Platform4" type="CharacterBody2D" parent="."]
+position = Vector2(754, 183)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4"]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_0v8qu")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform4"]
+texture = SubResource("PlaceholderTexture2D_0v8qu")
+
+[node name="Platform2" type="CharacterBody2D" parent="."]
+position = Vector2(1031, 352)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
+shape = SubResource("RectangleShape2D_hxt8g")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform2"]
+texture = SubResource("PlaceholderTexture2D_0v8qu")
+
+[node name="Platform3" type="CharacterBody2D" parent="."]
+position = Vector2(-21, 347)
+collision_mask = 10
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
+shape = SubResource("RectangleShape2D_hxt8g")
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform3"]
+texture = SubResource("PlaceholderTexture2D_0v8qu")
+
+[node name="Wall" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
+position = Vector2(366, 271.5)
+shape = SubResource("RectangleShape2D_3fbp7")
+
+[node name="Sprite2D" type="Sprite2D" parent="Wall"]
+position = Vector2(368, 270)
+texture = SubResource("PlaceholderTexture2D_3fbp7")
