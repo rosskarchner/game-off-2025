@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://ca8axwbelgiy7" path="res://art/player-walking_0001.png" id="6_fjrip"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3vyb7"]
-size = Vector2(79, 76)
+size = Vector2(79, 40)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tuyoq"]
 animations = [{
@@ -71,7 +71,7 @@ animations = [{
 size = Vector2(35, 17)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fjrip"]
-size = Vector2(39, 13.5)
+size = Vector2(44.5, 13.5)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 collision_layer = 2
@@ -86,7 +86,7 @@ limit_bottom = 648
 script = ExtResource("3_wrapping")
 
 [node name="BodyCollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1.5000005, 2)
+position = Vector2(1.5000005, -8)
 shape = SubResource("RectangleShape2D_3vyb7")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -115,7 +115,7 @@ collision_layer = 64
 collision_mask = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BonkingDetector"]
-position = Vector2(3, 11)
+position = Vector2(0.25, 11)
 shape = SubResource("RectangleShape2D_fjrip")
 
 [connection signal="area_entered" from="BonkedDetector" to="." method="_on_bonked_detector_area_entered"]

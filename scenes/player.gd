@@ -4,6 +4,9 @@ enum FacingDirections {Right,Left}
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var ground_detector: RayCast2D = $GroundDetector
 @onready var flap_cooldown_timer: Timer = $JumpCooldownTimer
+@onready var camera_2d: Camera2D = $Camera2D
+
+var death_scene = preload("res://scenes/player_death.tscn")
 
 ## Arcade Joust-style constants
 const FLAP_FORCE = -600.0    ## Upward thrust per flap
@@ -81,5 +84,11 @@ func _on_bonking_detector_area_entered(area: Area2D) -> void:
 	print("bonk")
 
 
-func _on_bonked_detector_area_entered(area: Area2D) -> void:
-	print("oh no I'm bonked")
+func _on_bonked_detector_area_entered(_area: Area2D) -> void:
+	var parent = get_parent()
+	var death = death_scene.instantiate()
+	death.position = position
+	parent.add_child(death)
+	camera_2d.reparent(death)
+	queue_free()
+	

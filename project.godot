@@ -38,6 +38,7 @@ world=""
 2d_physics/layer_7="PlayerBonkingArea"
 2d_physics/layer_8="PlayerBonkedArea"
 2d_physics/layer_9="MobBonkingArea"
+2d_physics/layer_10="FISH_PHYSICS"
 
 [physics]
 

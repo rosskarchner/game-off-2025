@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://b3ppy6ui8tqnp"]
+[gd_scene load_steps=11 format=3 uid="uid://b3ppy6ui8tqnp"]
 
 [ext_resource type="Script" uid="uid://crlw6apyd75s0" path="res://scenes/mob.gd" id="1_bsing"]
 [ext_resource type="Texture2D" uid="uid://dwkras5w4diu5" path="res://art/gull-flying_0001.png" id="2_71rcx"]
 [ext_resource type="Script" uid="uid://bs63lc3465t34" path="res://scenes/wrapping_controller.gd" id="3_d4cuo"]
 [ext_resource type="Texture2D" uid="uid://ceoq45pd724bx" path="res://art/gull-flying_0002.png" id="3_xsfyf"]
 [ext_resource type="Resource" uid="uid://cmc44xuce4u8o" path="res://resources/mob_definitions/gull_simple.tres" id="5_gull"]
+[ext_resource type="PackedScene" uid="uid://cvj40s75sqokw" path="res://scenes/fish.tscn" id="6_h8ps3"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_h8ps3"]
 animations = [{
@@ -21,7 +22,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4wyf3"]
-size = Vector2(61.5, 33)
+size = Vector2(44.75, 20.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d4cuo"]
 size = Vector2(24.5, 11.5)
@@ -31,6 +32,7 @@ size = Vector2(30, 5)
 
 [node name="Mob" type="CharacterBody2D"]
 collision_layer = 8
+collision_mask = 3
 script = ExtResource("1_bsing")
 mob_definition = ExtResource("5_gull")
 
@@ -39,7 +41,7 @@ scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_h8ps3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.25, -0.5)
+position = Vector2(-2.375, 9.25)
 shape = SubResource("RectangleShape2D_4wyf3")
 
 [node name="WrappingController" type="Node2D" parent="."]
@@ -68,6 +70,14 @@ shape = SubResource("RectangleShape2D_71rcx")
 [node name="EvaluatePlayerPosition" type="Timer" parent="."]
 wait_time = 1.5
 autostart = true
+
+[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
+position = Vector2(-2, 19)
+node_a = NodePath("..")
+node_b = NodePath("../Fish")
+
+[node name="Fish" parent="." instance=ExtResource("6_h8ps3")]
+position = Vector2(-2, 37)
 
 [connection signal="area_entered" from="BonkedDetector" to="." method="_on_bonk_detector_area_entered"]
 [connection signal="timeout" from="EvaluatePlayerPosition" to="." method="_on_evaluate_player_position_timeout"]

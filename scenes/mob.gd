@@ -5,6 +5,7 @@ enum FacingDirections {Right, Left}
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var player = get_tree().get_first_node_in_group("player")
+@onready var fish: Fish = $Fish
 
 @export var mob_definition: MobDefinition
 
@@ -235,7 +236,8 @@ func grab_player(p_player) -> void:
 		p_player.take_damage(999)  # Instant kill
 
 func _on_bonk_detector_area_entered(_area: Area2D) -> void:
-	print("I've been bonked")
+	fish.reparent(get_parent())
+	fish.free_fall = true
 	queue_free()
 
 func _on_evaluate_player_position_timeout() -> void:

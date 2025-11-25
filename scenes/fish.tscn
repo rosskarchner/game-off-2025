@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://cvj40s75sqokw"]
+
+[ext_resource type="Texture2D" uid="uid://d2kthn8kkwql2" path="res://art/fish2.png" id="1_n6yr6"]
+[ext_resource type="Script" uid="uid://dsmyml351nwat" path="res://scenes/fish.gd" id="1_nub35"]
+[ext_resource type="Script" uid="uid://bs63lc3465t34" path="res://scenes/wrapping_controller.gd" id="2_8g0i4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8g0i4"]
+size = Vector2(60, 21)
+
+[node name="Fish" type="CharacterBody2D"]
+collision_layer = 512
+script = ExtResource("1_nub35")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_n6yr6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, -7.5)
+shape = SubResource("RectangleShape2D_8g0i4")
+
+[node name="WrappingController" type="Node2D" parent="."]
+script = ExtResource("2_8g0i4")
+metadata/_custom_type_script = "uid://bs63lc3465t34"
