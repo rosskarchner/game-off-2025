@@ -3,14 +3,15 @@
 [ext_resource type="Texture2D" uid="uid://c1fcwe34jbq0o" path="res://art/player-walking_0002.png" id="1_wywbb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yik17"]
-size = Vector2(149, 70)
+size = Vector2(71, 63)
 
 [node name="PlayerDeath" type="RigidBody2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.75, 0.75)
 texture = ExtResource("1_wywbb")
 flip_v = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(6.5, 5)
+position = Vector2(13.5, -0.5)
 shape = SubResource("RectangleShape2D_yik17")

@@ -2,6 +2,7 @@ extends Node2D
 
 var segment_scene = preload("res://scenes/map_segment.tscn")
 var next_segment_location = Vector2(0,0)
+var game_over_scene = preload("res://scenes/game_over_screen.tscn")
 
 # Called when the node enters the scene tree for the first time.
 
@@ -15,3 +16,11 @@ func load_next_segment():
 
 func _ready() -> void:
 	load_next_segment()
+
+func out_of_power() -> void:
+	var game_over = game_over_scene.instantiate()
+	add_child(game_over)
+
+func _on_player_died() -> void:
+	var game_over = game_over_scene.instantiate()
+	add_child(game_over)

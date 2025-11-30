@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=3 uid="uid://dlqfqe5770v12"]
+
+[ext_resource type="Script" uid="uid://b7juh7qfcwstl" path="res://scenes/game_over_screen.gd" id="1_iwahs"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4vnjk"]
+font_size = 25
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_iwahs")
+
+[node name="GameOverScreen" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GameOverScreen"]
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="GameOverScreen/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="VBoxContainer" parent="GameOverScreen/MarginContainer/Panel"]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 300.0
+
+[node name="Message" type="Label" parent="GameOverScreen/MarginContainer/Panel/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "You've been bonked!"
+label_settings = SubResource("LabelSettings_4vnjk")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Label2" type="Label" parent="GameOverScreen/MarginContainer/Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="GameOverScreen/MarginContainer/Panel/HBoxContainer"]
+layout_mode = 2
+text = "Try again!"
+
+[node name="Label3" type="Label" parent="GameOverScreen/MarginContainer/Panel/HBoxContainer"]
+layout_mode = 2
+
+[connection signal="pressed" from="GameOverScreen/MarginContainer/Panel/HBoxContainer/Button" to="." method="_on_button_pressed"]

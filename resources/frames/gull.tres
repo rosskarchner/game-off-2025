@@ -1,0 +1,26 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://bxn8j2si74w0r"]
+
+[ext_resource type="Texture2D" uid="uid://dwkras5w4diu5" path="res://art/gull-flying_0001.png" id="1_lepx8"]
+[ext_resource type="Texture2D" uid="uid://ceoq45pd724bx" path="res://art/gull-flying_0002.png" id="2_qfcno"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qfcno")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_lepx8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_qfcno")
+}],
+"loop": false,
+"name": &"flap",
+"speed": 5.0
+}]

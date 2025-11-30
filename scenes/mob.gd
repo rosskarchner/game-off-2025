@@ -5,7 +5,9 @@ enum FacingDirections {Right, Left}
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var player = get_tree().get_first_node_in_group("player")
-@onready var fish: Fish = $Fish
+@onready var fish_sprite: Sprite2D = $FishSprite
+
+var fish_scene = preload("res://scenes/fish.tscn")
 
 @export var mob_definition: MobDefinition
 
@@ -13,6 +15,7 @@ var facing: FacingDirections = FacingDirections.Right
 var baseline_height: float = 0.0
 var should_flap: bool = false
 var time_alive: float = 0.0
+var is_in_flipped_parent: bool = false
 
 # AI state variables
 var target_player = null
@@ -27,6 +30,14 @@ func _ready() -> void:
 		push_error("Mob requires a mob_definition to be set")
 		queue_free()
 		return
+
+	# Check if we're in a flipped parent (check up the hierarchy)
+	var current = get_parent()
+	while current:
+		if current is Node2D and current.scale.x < 0:
+			is_in_flipped_parent = true
+			break
+		current = current.get_parent()
 
 	# Apply sprite frames if defined
 	if mob_definition.sprite_frames:
@@ -51,6 +62,9 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
+	# Reset arc of flight if constrained by collision
+	reset_arc_on_constraint()
+
 ## Simple behavior: target-seeking with flapping
 func update_simple_behavior(delta: float) -> void:
 	# Add gravity (only if gravity_multiplier is > 0)
@@ -63,6 +77,7 @@ func update_simple_behavior(delta: float) -> void:
 	# Handle flap
 	if should_flap:
 		velocity.y = mob_definition.flap_strength
+		sprite.play("flap")
 		should_flap = false
 
 	# Check if we need to flap
@@ -71,8 +86,10 @@ func update_simple_behavior(delta: float) -> void:
 
 	# Horizontal movement
 	var direction = Vector2.RIGHT if facing == FacingDirections.Right else Vector2.LEFT
+	if is_in_flipped_parent:
+		direction = -direction
 	velocity.x = (direction * mob_definition.horizontal_speed).x
-	sprite.flip_h = velocity.x > 0
+	sprite.flip_h = facing == FacingDirections.Right
 
 	if is_on_floor():
 		velocity.x = move_toward(velocity.x, 0, mob_definition.horizontal_speed * delta * 6)
@@ -95,8 +112,10 @@ func update_ai_behavior(delta: float) -> void:
 
 	# Handle horizontal movement
 	var direction = Vector2.RIGHT if current_direction > 0 else Vector2.LEFT
+	if is_in_flipped_parent:
+		direction = -direction
 	velocity.x = direction.x * mob_definition.horizontal_speed
-	sprite.flip_h = velocity.x > 0
+	sprite.flip_h = current_direction > 0
 
 	# Handle flapping for AI behaviors
 	if should_flap:
@@ -203,6 +222,18 @@ func decide_random_action() -> void:
 	if randf() < 0.4:
 		should_flap = true
 
+func reset_arc_on_constraint() -> void:
+	# If moving upward and hit something, reset baseline to current position
+	if velocity.y < 0 and is_on_ceiling():
+		baseline_height = global_position.y
+		velocity.y = 0
+		should_flap = false
+	# If hit a wall while moving upward, also reset
+	elif velocity.y < 0 and is_on_wall():
+		baseline_height = global_position.y
+		velocity.y = 0
+		should_flap = false
+
 func find_target_player():
 	if not player:
 		return null
@@ -236,8 +267,10 @@ func grab_player(p_player) -> void:
 		p_player.take_damage(999)  # Instant kill
 
 func _on_bonk_detector_area_entered(_area: Area2D) -> void:
-	fish.reparent(get_parent())
-	fish.free_fall = true
+	var fish:Fish = fish_scene.instantiate()
+	fish.position = position
+	add_sibling(fish)
+	fish_sprite.queue_free()
 	queue_free()
 
 func _on_evaluate_player_position_timeout() -> void:
