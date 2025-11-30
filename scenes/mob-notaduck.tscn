@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://buovufmeqfnt"]
+
+[ext_resource type="Script" uid="uid://crlw6apyd75s0" path="res://scenes/mob.gd" id="1_2aqi1"]
+[ext_resource type="Resource" uid="uid://cmc44xuce4u8o" path="res://resources/mob_definitions/gull_simple.tres" id="2_o125v"]
+[ext_resource type="SpriteFrames" uid="uid://3auqf0nw2445" path="res://resources/frames/notaduck.tres" id="3_fswo3"]
+[ext_resource type="Script" uid="uid://bs63lc3465t34" path="res://scenes/wrapping_controller.gd" id="4_fquv4"]
+[ext_resource type="Texture2D" uid="uid://d2kthn8kkwql2" path="res://art/fish2.png" id="5_o20on"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4wyf3"]
+size = Vector2(44.75, 29)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d4cuo"]
+size = Vector2(24.5, 10.75)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_71rcx"]
+size = Vector2(30, 5)
+
+[node name="NotADuck" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 3
+script = ExtResource("1_2aqi1")
+mob_definition = ExtResource("2_o125v")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+sprite_frames = ExtResource("3_fswo3")
+animation = &"flap"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2.375, 4.5)
+shape = SubResource("RectangleShape2D_4wyf3")
+
+[node name="WrappingController" type="Node2D" parent="."]
+script = ExtResource("4_fquv4")
+
+[node name="FlapTimer" type="Timer" parent="."]
+wait_time = 0.11
+autostart = true
+
+[node name="BonkedDetector" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BonkedDetector"]
+position = Vector2(-20, -8.625)
+shape = SubResource("RectangleShape2D_d4cuo")
+
+[node name="BonkingDetector" type="Area2D" parent="."]
+collision_layer = 256
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BonkingDetector"]
+position = Vector2(-5, 22)
+shape = SubResource("RectangleShape2D_71rcx")
+
+[node name="EvaluatePlayerPosition" type="Timer" parent="."]
+wait_time = 1.5
+autostart = true
+
+[node name="FishSprite" type="Sprite2D" parent="."]
+position = Vector2(4, 21)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_o20on")
+
+[connection signal="area_entered" from="BonkedDetector" to="." method="_on_bonk_detector_area_entered"]
+[connection signal="timeout" from="EvaluatePlayerPosition" to="." method="_on_evaluate_player_position_timeout"]

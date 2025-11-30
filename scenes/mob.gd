@@ -65,6 +65,9 @@ func _physics_process(delta: float) -> void:
 	# Reset arc of flight if constrained by collision
 	reset_arc_on_constraint()
 
+	# Change direction if hit a wall
+	handle_wall_collision()
+
 ## Simple behavior: target-seeking with flapping
 func update_simple_behavior(delta: float) -> void:
 	# Add gravity (only if gravity_multiplier is > 0)
@@ -234,6 +237,15 @@ func reset_arc_on_constraint() -> void:
 		velocity.y = 0
 		should_flap = false
 
+func handle_wall_collision() -> void:
+	# Change direction if the mob hits a wall
+	if is_on_wall():
+		match mob_definition.behavior_type:
+			MobDefinition.BehaviorType.SIMPLE:
+				facing = FacingDirections.Left if facing == FacingDirections.Right else FacingDirections.Right
+			MobDefinition.BehaviorType.AI_CONTROLLED:
+				current_direction *= -1.0
+
 func find_target_player():
 	if not player:
 		return null
@@ -269,9 +281,8 @@ func grab_player(p_player) -> void:
 func _on_bonk_detector_area_entered(_area: Area2D) -> void:
 	var fish:Fish = fish_scene.instantiate()
 	fish.position = position
-	add_sibling(fish)
-	fish_sprite.queue_free()
-	queue_free()
+	call_deferred("add_sibling", fish)
+	call_deferred("queue_free")
 
 func _on_evaluate_player_position_timeout() -> void:
 	# Legacy timer - can be used if still in scene

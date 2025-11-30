@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://qkslqqvhe0s0"]
+[gd_scene load_steps=4 format=3 uid="uid://qkslqqvhe0s0"]
 
-[ext_resource type="PackedScene" uid="uid://b3ppy6ui8tqnp" path="res://scenes/mob.tscn" id="1_p72y3"]
-[ext_resource type="Resource" uid="uid://d31jmijj84pbp" path="res://resources/mob_definitions/shadow_aggressive.tres" id="2_ibx0h"]
+[ext_resource type="PackedScene" uid="uid://bjafgvj4ccc6q" path="res://scenes/mob_spawn.tscn" id="1_84oa3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y6blw"]
 size = Vector2(180, 20)
@@ -66,5 +65,5 @@ shape = SubResource("RectangleShape2D_y6blw")
 [node name="Sprite2D" type="Sprite2D" parent="Platform4"]
 texture = SubResource("PlaceholderTexture2D_hu0ai")
 
-[node name="Mob" parent="." instance=ExtResource("1_p72y3")]
-mob_definition = ExtResource("2_ibx0h")
+[node name="MobSpawn" parent="." instance=ExtResource("1_84oa3")]
+position = Vector2(92, 87)

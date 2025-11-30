@@ -1,12 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://dat5t4ex4epq5"]
+[gd_scene load_steps=5 format=3 uid="uid://dat5t4ex4epq5"]
 
 [ext_resource type="Script" uid="uid://dommkntvj4a7t" path="res://scenes/map_segment.gd" id="1_vp6h3"]
-[ext_resource type="PackedScene" uid="uid://qkslqqvhe0s0" path="res://scenes/layouts/basic_layout.tscn" id="2_w2hli"]
 [ext_resource type="PackedScene" uid="uid://rnnfemnrrah6" path="res://scenes/layouts/maze1.tscn" id="3_p5rpr"]
+[ext_resource type="PackedScene" uid="uid://cxglyhrmhkifh" path="res://scenes/layouts/tilemap_basic.tscn" id="3_y6blw"]
+[ext_resource type="PackedScene" uid="uid://cl4jlrv6megeo" path="res://scenes/layouts/walled_off.tscn" id="4_y6blw"]
 
 [node name="MapSegment" type="Node2D"]
 script = ExtResource("1_vp6h3")
-layout_scenes = Array[PackedScene]([ExtResource("2_w2hli"), ExtResource("3_p5rpr")])
+layout_scenes = Array[PackedScene]([ExtResource("3_p5rpr"), ExtResource("3_y6blw"), ExtResource("4_y6blw")])
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 position = Vector2(11, 632)

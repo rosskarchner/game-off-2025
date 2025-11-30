@@ -20,7 +20,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("2_qfcno")
 }],
-"loop": false,
+"loop": true,
 "name": &"flap",
 "speed": 5.0
 }]

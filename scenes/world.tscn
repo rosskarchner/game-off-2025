@@ -31,4 +31,5 @@ centered = false
 
 [connection signal="died" from="Player" to="." method="_on_player_died"]
 [connection signal="fish_power_changed" from="Player" to="UI" method="_on_player_fish_power_changed"]
+[connection signal="max_level_changed" from="Player" to="UI" method="_on_player_max_level_changed"]
 [connection signal="out_of_power" from="Player" to="." method="out_of_power"]

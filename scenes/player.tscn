@@ -118,5 +118,9 @@ collision_mask = 32
 position = Vector2(6, 11.625)
 shape = SubResource("RectangleShape2D_fjrip")
 
+[node name="EvaluateLevel" type="Timer" parent="."]
+autostart = true
+
 [connection signal="area_entered" from="BonkedDetector" to="." method="_on_bonked_detector_area_entered"]
 [connection signal="area_entered" from="BonkingDetector" to="." method="_on_bonking_detector_area_entered"]
+[connection signal="timeout" from="EvaluateLevel" to="." method="_on_evaluate_level_timeout"]

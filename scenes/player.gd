@@ -6,12 +6,22 @@ enum FacingDirections {Right,Left}
 signal died
 signal out_of_power
 signal fish_power_changed(new_value)
+signal max_level_changed(new_value)
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var ground_detector: RayCast2D = $GroundDetector
 @onready var flap_cooldown_timer: Timer = $JumpCooldownTimer
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var body_collision_shape_2d: CollisionShape2D = $BodyCollisionShape2D
+
+var max_level=1:
+	set(new_max_level):
+		max_level = new_max_level
+		max_level_changed.emit(new_max_level)
+
+var current_level:int:
+	get():
+		return int(abs(global_position.y-648)/648)+1
 
 var remaining_fish_power = 100.0:
 	set(new_value):
@@ -52,17 +62,17 @@ func update_sprite():
 
 	sprite.play(where + "-" + state)
 
-func _process(_delta: float) -> void:
-	update_sprite()
 
 func _physics_process(delta: float) -> void:
 	grounded = is_on_floor()
 	near_ground = ground_detector.is_colliding()
 
-	if near_ground and not grounded:
-		body_collision_shape_2d.shape.size.y=95
-	elif not near_ground:
-		body_collision_shape_2d.shape.size.y=40
+	# Update collision shape FIRST, before any physics
+	if grounded or near_ground:
+		body_collision_shape_2d.shape.size.y = 95
+	else:
+		body_collision_shape_2d.shape.size.y = 40
+
 	# Apply gravity with terminal velocity FIRST
 	if not grounded:
 		var gravity = get_gravity().y * GRAVITY_SCALE
@@ -82,11 +92,11 @@ func _physics_process(delta: float) -> void:
 
 		# Horizontal Movement (Joust-style inertia)
 		var target_direction = Input.get_axis("ui_left", "ui_right")
-		
+
 		# Determine acceleration/deceleration based on state
 		var accel = RUN_ACCEL if grounded else AIR_ACCEL
 		var decel = RUN_DECEL if grounded else AIR_DECEL
-		
+
 		if target_direction:
 			# Accelerate towards target direction
 			velocity.x = move_toward(velocity.x, target_direction * MAX_SPEED, accel * delta)
@@ -95,11 +105,14 @@ func _physics_process(delta: float) -> void:
 			# Decelerate (friction/air resistance)
 			velocity.x = move_toward(velocity.x, 0, decel * delta)
 	else:
-		velocity.x=0.0
+		velocity.x = 0.0
 	sprite.flip_h = facing == FacingDirections.Right
 	moving = abs(velocity.x) > 10.0 # Consider moving if speed is significant
 
 	move_and_slide()
+
+	# Update sprite AFTER physics, so it reflects current state
+	update_sprite()
 
 
 func _on_bonking_detector_area_entered(_area: Area2D) -> void:
@@ -110,8 +123,16 @@ func _on_bonked_detector_area_entered(_area: Area2D) -> void:
 	var parent = get_parent()
 	var death = death_scene.instantiate()
 	death.position = position
+	call_deferred("_finalize_death", parent, death)
+	died.emit()
+
+func _finalize_death(parent: Node, death: Node) -> void:
 	parent.add_child(death)
 	camera_2d.reparent(death)
-	died.emit()
 	queue_free()
 	
+
+
+func _on_evaluate_level_timeout() -> void:
+	if current_level > max_level:
+		max_level = current_level
