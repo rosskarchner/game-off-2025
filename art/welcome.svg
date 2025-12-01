@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="237.95694"
+   height="100.67752"
+   viewBox="0 0 237.95694 100.67752"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <rect
+       x="130.76923"
+       y="193.58974"
+       width="603.84613"
+       height="165.38461"
+       id="rect1" />
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-269.82159,-428.74081)">
+    <text
+       xml:space="preserve"
+       id="text1"
+       style="font-weight:600;font-size:24px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans Semi-Bold';text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect1);fill:#ffffff"
+       transform="rotate(-14.292046,1172.1982,-263.26957)"><tspan
+         x="130.76953"
+         y="215.42685"
+         id="tspan2">Bird</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:600;font-size:53.3333px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans Semi-Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff"
+       x="331.13864"
+       y="503.91138"
+       id="text2"><tspan
+         id="tspan1"
+         x="331.13864"
+         y="503.91138">onkers</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:600;font-size:85.3333px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans Semi-Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff"
+       x="-53.710793"
+       y="608.7851"
+       id="text3"
+       transform="rotate(-34.194187)"><tspan
+         id="tspan3"
+         x="-53.710793"
+         y="608.7851">B</tspan></text>
+  </g>
+</svg>

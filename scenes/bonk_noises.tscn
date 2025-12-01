@@ -1,0 +1,26 @@
+[gd_scene load_steps=7 format=3 uid="uid://dlg3kr4op3nhm"]
+
+[ext_resource type="AudioStream" uid="uid://dnc0jqm6o8e7" path="res://audio/impact/impactGlass_light_000.ogg" id="1_arp22"]
+[ext_resource type="Script" uid="uid://dtv2vrr5wvewy" path="res://scenes/play_random_sound.gd" id="1_psljm"]
+[ext_resource type="AudioStream" uid="uid://u1csijvphtxa" path="res://audio/impact/impactGlass_light_001.ogg" id="2_psljm"]
+[ext_resource type="AudioStream" uid="uid://cnesdfmgsbokd" path="res://audio/impact/impactGlass_light_002.ogg" id="3_cd5gs"]
+[ext_resource type="AudioStream" uid="uid://b17nexau4q0fm" path="res://audio/impact/impactGlass_light_003.ogg" id="4_g7jtl"]
+[ext_resource type="AudioStream" uid="uid://bbwvhtwwhryv5" path="res://audio/impact/impactGlass_light_004.ogg" id="5_12sbj"]
+
+[node name="BonkNoises" type="Node"]
+script = ExtResource("1_psljm")
+
+[node name="AudioStreamPlayer0" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_arp22")
+
+[node name="AudioStreamPlayer1" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_psljm")
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_cd5gs")
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_g7jtl")
+
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_12sbj")

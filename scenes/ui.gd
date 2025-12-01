@@ -1,7 +1,7 @@
 extends CanvasLayer
 
-@onready var progress_bar: ProgressBar = $HBoxContainer2/ProgressBar
-@onready var max_level_field: Label = $HBoxContainer/MaxLevelField
+@onready var progress_bar: ProgressBar = %ProgressBar
+@onready var max_level_field: Label = %MaxLevelField
 
 
 func _on_player_fish_power_changed(new_value):

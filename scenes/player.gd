@@ -30,6 +30,10 @@ var remaining_fish_power = 100.0:
 			out_of_power.emit()
 		fish_power_changed.emit(new_value)
 		
+func play_flap_sound():
+	var player=%FlapSounds.get_children().pick_random()
+	player.play()
+
 
 var death_scene = preload("res://scenes/player_death.tscn")
 
@@ -63,6 +67,7 @@ func update_sprite():
 	sprite.play(where + "-" + state)
 
 
+
 func _physics_process(delta: float) -> void:
 	grounded = is_on_floor()
 	near_ground = ground_detector.is_colliding()
@@ -85,6 +90,7 @@ func _physics_process(delta: float) -> void:
 	if remaining_fish_power > 0.0:
 		# Handle flapping (thrust upward) - happens after gravity so it can override
 		if Input.is_action_just_pressed("ui_accept") and flap_cooldown_timer.is_stopped():
+			play_flap_sound()
 			velocity.y = FLAP_FORCE
 			flap_cooldown_timer.start()
 			sprite.play("flap")
@@ -116,10 +122,11 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_bonking_detector_area_entered(_area: Area2D) -> void:
-	print("bonk")
+	BonkNoises.play()
 
 
 func _on_bonked_detector_area_entered(_area: Area2D) -> void:
+	BonkNoises.play()
 	var parent = get_parent()
 	var death = death_scene.instantiate()
 	death.position = position
@@ -136,3 +143,9 @@ func _finalize_death(parent: Node, death: Node) -> void:
 func _on_evaluate_level_timeout() -> void:
 	if current_level > max_level:
 		max_level = current_level
+
+
+func _on_walking_sound_timer_timeout() -> void:
+	if grounded and moving:
+		var walking_sound = $WalkingSounds.get_children().pick_random()
+		walking_sound.play()

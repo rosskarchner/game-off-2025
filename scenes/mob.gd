@@ -46,6 +46,17 @@ func _ready() -> void:
 	baseline_height = global_position.y + mob_definition.baseline_height_offset
 	base_y_position = global_position.y
 
+	# Adjust baseline height if spawned too close to ceiling/floor
+	adjust_baseline_height_to_safe_space()
+
+	# Set baseline well above spawn so mob will naturally fly upward
+	baseline_height = global_position.y - (mob_definition.height_adjustment_range * 2.0)
+
+	print("Mob baseline_height: ", baseline_height, " global_position.y: ", global_position.y, " spawn offset: ", mob_definition.baseline_height_offset)
+
+	# Start with an upward impulse to get the mob moving
+	should_flap = true
+
 func _physics_process(delta: float) -> void:
 	if not mob_definition:
 		return
@@ -61,6 +72,9 @@ func _physics_process(delta: float) -> void:
 			update_sine_patrol_behavior(delta)
 
 	move_and_slide()
+
+	# Prevent pushing through walls
+	prevent_wall_penetration()
 
 	# Reset arc of flight if constrained by collision
 	reset_arc_on_constraint()
@@ -83,9 +97,34 @@ func update_simple_behavior(delta: float) -> void:
 		sprite.play("flap")
 		should_flap = false
 
+	# Dynamically adjust flap range based on available space
+	var safe_range = get_safe_amplitude()
+
 	# Check if we need to flap
-	if global_position.y > baseline_height + (mob_definition.height_adjustment_range * 1.5):
+	if global_position.y > baseline_height + (safe_range * 1.5):
 		should_flap = true
+
+	# Escape from ceiling by forcing downward movement away from it
+	if is_on_ceiling():
+		should_flap = true
+		# Force a downward velocity (positive Y) to push away from ceiling
+		# Flap strength is negative (upward), so negate it to push downward
+		if velocity.y <= 0:
+			velocity.y = -mob_definition.flap_strength * 0.5  # Positive value pushing downward
+		if time_alive < 5.0:  # Debug: only print for first 5 seconds
+			print("CEILING DETECTED - forcing downward, velocity.y: ", velocity.y)
+
+	# Update baseline_height if we've moved to a new floor level
+	if is_on_floor():
+		# Keep baseline slightly above current floor
+		baseline_height = global_position.y - mob_definition.height_adjustment_range
+		# Don't let baseline stay locked to spawn point - allow upward movement
+		if global_position.y < baseline_height + mob_definition.height_adjustment_range:
+			baseline_height = global_position.y - mob_definition.height_adjustment_range
+
+	# Debug: Print flap info once when on ground
+	if is_on_floor() and time_alive < 0.1:
+		print("On floor - baseline: ", baseline_height, " pos.y: ", global_position.y, " safe_range: ", safe_range, " should_flap: ", should_flap)
 
 	# Horizontal movement
 	var direction = Vector2.RIGHT if facing == FacingDirections.Right else Vector2.LEFT
@@ -237,6 +276,16 @@ func reset_arc_on_constraint() -> void:
 		velocity.y = 0
 		should_flap = false
 
+func prevent_wall_penetration() -> void:
+	# If pushed into a wall, try to push back out
+	if is_on_wall():
+		# Get the wall normal and push away from it
+		var push_direction = get_wall_normal()
+		# Move slightly away from the wall to prevent sticking
+		global_position += push_direction * 2.0
+		# Stop horizontal velocity to prevent re-penetration
+		velocity.x = 0
+
 func handle_wall_collision() -> void:
 	# Change direction if the mob hits a wall
 	if is_on_wall():
@@ -245,6 +294,51 @@ func handle_wall_collision() -> void:
 				facing = FacingDirections.Left if facing == FacingDirections.Right else FacingDirections.Right
 			MobDefinition.BehaviorType.AI_CONTROLLED:
 				current_direction *= -1.0
+
+func adjust_baseline_height_to_safe_space() -> void:
+	# Check if there's enough space above and below the baseline
+	var space_state = get_world_2d().direct_space_state
+	var probe_distance = mob_definition.height_adjustment_range * 2.0
+
+	# Check space above baseline
+	var query_up = PhysicsRayQueryParameters2D.create(
+		Vector2(global_position.x, baseline_height),
+		Vector2(global_position.x, baseline_height - probe_distance)
+	)
+	var result_up = space_state.intersect_ray(query_up)
+	var space_above = probe_distance if not result_up else (Vector2(global_position.x, baseline_height) - result_up.position).length()
+
+	# Check space below baseline
+	var query_down = PhysicsRayQueryParameters2D.create(
+		Vector2(global_position.x, baseline_height),
+		Vector2(global_position.x, baseline_height + probe_distance)
+	)
+	var result_down = space_state.intersect_ray(query_down)
+	var space_below = probe_distance if not result_down else (result_down.position - Vector2(global_position.x, baseline_height)).length()
+
+	# If not enough space, shift baseline to center of available space
+	if space_above < mob_definition.height_adjustment_range or space_below < mob_definition.height_adjustment_range:
+		var shift = (space_below - space_above) / 2.0
+		baseline_height += shift
+
+func get_safe_amplitude() -> float:
+	# Use a raycast to detect available space above and below
+	var space_state = get_world_2d().direct_space_state
+	var default_range = mob_definition.height_adjustment_range
+
+	# Cast upward
+	var query_up = PhysicsRayQueryParameters2D.create(global_position, global_position - Vector2(0, default_range * 3))
+	var result_up = space_state.intersect_ray(query_up)
+	var space_above = default_range * 3 if not result_up else (global_position - result_up.position).length()
+
+	# Cast downward
+	var query_down = PhysicsRayQueryParameters2D.create(global_position, global_position + Vector2(0, default_range * 3))
+	var result_down = space_state.intersect_ray(query_down)
+	var space_below = default_range * 3 if not result_down else (result_down.position - global_position).length()
+
+	# Return the smaller of the available space and default range
+	var available = minf(space_above, space_below)
+	return minf(available / 2.0, default_range)
 
 func find_target_player():
 	if not player:

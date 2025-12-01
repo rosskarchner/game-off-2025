@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="Game Off 2025"
-run/main_scene="uid://oth21bhiydlu"
+run/main_scene="uid://djxncaoswwybi"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
 MobDefinitionGenerator="res://mob_definition_autoload.gd"
+BonkNoises="*res://scenes/bonk_noises.tscn"
 
 [editor_plugins]
 
