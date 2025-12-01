@@ -18,7 +18,7 @@ func _on_visible_on_screen_notifier_2d_screen_entered() -> void:
 	spawned = true
 	var player:Player = get_tree().get_first_node_in_group("player")
 	var chance_of_notaduck = (float(player.current_level) /5.0 ) *.20
-	if randf() <= 0.5: #chance_of_notaduck:
+	if randf() <= chance_of_notaduck:
 		spawn(notaduck_scene)
 	else:
 		spawn(gull_scene) 

@@ -1,0 +1,95 @@
+[gd_scene load_steps=8 format=3 uid="uid://d3qr10hexphur"]
+
+[ext_resource type="Script" uid="uid://cybe3rmyenbxs" path="res://scenes/tutorial.gd" id="1_6yjpi"]
+[ext_resource type="Texture2D" uid="uid://caskv3va3pgvp" path="res://art/whitefield.png" id="1_cq4me"]
+[ext_resource type="LabelSettings" uid="uid://c6akli5cyh3ec" path="res://resources/ui-labelsettings.tres" id="2_6yjpi"]
+[ext_resource type="Texture2D" uid="uid://dwqlkibhov4me" path="res://art/tutorial/Screenshot From 2025-11-30 21-53-10.png" id="3_gbqnl"]
+[ext_resource type="Texture2D" uid="uid://hp0hhxgmncdj" path="res://art/tutorial/Screenshot From 2025-11-30 21-54-39.png" id="4_ckvwl"]
+[ext_resource type="Texture2D" uid="uid://rimhc0n2e47c" path="res://art/tutorial/Screenshot From 2025-11-30 21-53-34.png" id="5_nlqja"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6yjpi"]
+font_size = 22
+
+[node name="Tutorial" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6yjpi")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_cq4me")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -153.5
+offset_bottom = 153.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Hit [space] to flap your wings"
+label_settings = ExtResource("2_6yjpi")
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("3_gbqnl")
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "  "
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Bonk other birds so they drop their fish"
+label_settings = ExtResource("2_6yjpi")
+horizontal_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("4_ckvwl")
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "  "
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+text = "Eat the fish to  keep flapping"
+label_settings = ExtResource("2_6yjpi")
+horizontal_alignment = 1
+
+[node name="TextureRect3" type="TextureRect" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("5_nlqja")
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Ready to play? hit [space]"
+label_settings = SubResource("LabelSettings_6yjpi")
+horizontal_alignment = 1

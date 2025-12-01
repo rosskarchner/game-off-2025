@@ -158,6 +158,17 @@ func update_ai_behavior(delta: float) -> void:
 	velocity.x = direction.x * mob_definition.horizontal_speed
 	sprite.flip_h = current_direction > 0
 
+	# Continuous height maintenance for AI mobs with targets
+	if target_player and is_instance_valid(target_player):
+		if mob_definition.ai_behavior == MobDefinition.AIBehavior.DEFENSIVE:
+			var desired_height = target_player.global_position.y - 150.0
+			if global_position.y > desired_height:
+				should_flap = true
+		elif mob_definition.ai_behavior == MobDefinition.AIBehavior.AGGRESSIVE:
+			var desired_height = target_player.global_position.y - 100.0
+			if global_position.y > desired_height:
+				should_flap = true
+
 	# Escape from ceiling by forcing downward movement
 	if is_on_ceiling():
 		velocity.y = -mob_definition.flap_strength * 0.5  # Positive value pushing downward
@@ -228,8 +239,9 @@ func decide_aggressive_action() -> void:
 	var direction_to_player = sign(target_player.global_position.x - global_position.x)
 	current_direction = direction_to_player
 
-	# Flap to match or exceed player height
-	if target_player.global_position.y < global_position.y - 20:
+	# Try to stay above the player for an advantage
+	var desired_height = target_player.global_position.y - 100.0  # 100 pixels above player
+	if global_position.y > desired_height:
 		should_flap = true
 
 func decide_defensive_action() -> void:
@@ -245,6 +257,8 @@ func decide_defensive_action() -> void:
 	if global_position.y > desired_height:
 		# Below desired height, flap to go up
 		should_flap = true
+		if time_alive < 2.0:
+			print("Hunter flapping: mob at y=", global_position.y, " desired=", desired_height)
 
 	if distance_to_player < mob_definition.attack_range:
 		# Too close - back off horizontally
@@ -355,7 +369,7 @@ func find_target_player():
 
 	# For simple behavior, use detection range to decide if we should track player
 	if mob_definition.behavior_type == MobDefinition.BehaviorType.SIMPLE:
-		if distance < mob_definition.detection_range:
+		if distance < mob_definition.detection_range and has_line_of_sight(player):
 			# Adjust baseline height based on player position
 			if global_position.y > player.global_position.y:
 				baseline_height -= mob_definition.height_adjustment_range
@@ -369,11 +383,27 @@ func find_target_player():
 				facing = FacingDirections.Right
 			return player
 
-	# For AI behaviors, just find nearest player in range
+	# For AI behaviors, just find nearest player in range (with line of sight check)
 	if distance <= mob_definition.detection_range:
-		return player
+		var has_sight = has_line_of_sight(player)
+		if time_alive < 2.0:
+			print("Hunter: distance=", distance, " in_range=", distance <= mob_definition.detection_range, " has_los=", has_sight)
+		if has_sight:
+			return player
 
 	return null
+
+func has_line_of_sight(target: Node2D) -> bool:
+	"""Check if there's a clear line of sight to the target."""
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsRayQueryParameters2D.create(global_position, target.global_position)
+	# Ignore the mob itself and the target in the raycast
+	query.exclude = [self, target]
+	# Only check collision with STATIC layer (walls), not floors/platforms
+	query.collision_mask = 1  # Layer 1 is STATIC
+	var result = space_state.intersect_ray(query)
+	# If no collision, we have line of sight
+	return result == null
 
 func grab_player(p_player) -> void:
 	if p_player and is_instance_valid(p_player):

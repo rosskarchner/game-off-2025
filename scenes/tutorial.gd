@@ -1,6 +1,6 @@
-extends Node2D
+extends Control
 
-var world_scene=preload("res://scenes/tutorial.tscn")
+var world_scene=preload("res://scenes/world.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

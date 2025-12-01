@@ -6,10 +6,9 @@
 script = ExtResource("1_3xxe7")
 mob_name = "Hunter"
 point_value = 750.0
-horizontal_speed = 600.0
+horizontal_speed = 700.0
 flap_strength = -420.0
 gravity_multiplier = 0.93
-behavior_type = 1.0
 ai_behavior = 1.0
 detection_range = 600.0
 reaction_time = 0.2
