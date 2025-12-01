@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://buovufmeqfnt"]
 
 [ext_resource type="Script" uid="uid://crlw6apyd75s0" path="res://scenes/mob.gd" id="1_2aqi1"]
-[ext_resource type="Resource" uid="uid://cmc44xuce4u8o" path="res://resources/mob_definitions/gull_simple.tres" id="2_o125v"]
+[ext_resource type="Resource" uid="uid://60cykmnfvtmj" path="res://resources/mob_definitions/hunter.tres" id="2_2aqi1"]
 [ext_resource type="SpriteFrames" uid="uid://3auqf0nw2445" path="res://resources/frames/notaduck.tres" id="3_fswo3"]
 [ext_resource type="Script" uid="uid://bs63lc3465t34" path="res://scenes/wrapping_controller.gd" id="4_fquv4"]
 [ext_resource type="Texture2D" uid="uid://d2kthn8kkwql2" path="res://art/fish2.png" id="5_o20on"]
@@ -19,7 +19,7 @@ size = Vector2(30, 5)
 collision_layer = 8
 collision_mask = 3
 script = ExtResource("1_2aqi1")
-mob_definition = ExtResource("2_o125v")
+mob_definition = ExtResource("2_2aqi1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.5, 0.5)

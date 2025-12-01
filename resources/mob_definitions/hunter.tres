@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MobDefinition" load_steps=2 format=3 uid="uid://60cykmnfvtmj"]
+
+[ext_resource type="Script" uid="uid://cngnw55hawwnb" path="res://resources/mob_definition.gd" id="1_3xxe7"]
+
+[resource]
+script = ExtResource("1_3xxe7")
+mob_name = "Hunter"
+point_value = 750.0
+horizontal_speed = 600.0
+flap_strength = -420.0
+gravity_multiplier = 0.93
+behavior_type = 1.0
+ai_behavior = 1.0
+detection_range = 600.0
+reaction_time = 0.2
+flap_frequency = 0.5

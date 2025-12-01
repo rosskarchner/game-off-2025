@@ -106,11 +106,10 @@ func update_simple_behavior(delta: float) -> void:
 
 	# Escape from ceiling by forcing downward movement away from it
 	if is_on_ceiling():
-		should_flap = true
 		# Force a downward velocity (positive Y) to push away from ceiling
 		# Flap strength is negative (upward), so negate it to push downward
-		if velocity.y <= 0:
-			velocity.y = -mob_definition.flap_strength * 0.5  # Positive value pushing downward
+		velocity.y = -mob_definition.flap_strength * 0.5  # Positive value pushing downward
+		should_flap = false  # Don't flap while on ceiling
 		if time_alive < 5.0:  # Debug: only print for first 5 seconds
 			print("CEILING DETECTED - forcing downward, velocity.y: ", velocity.y)
 
@@ -159,8 +158,12 @@ func update_ai_behavior(delta: float) -> void:
 	velocity.x = direction.x * mob_definition.horizontal_speed
 	sprite.flip_h = current_direction > 0
 
+	# Escape from ceiling by forcing downward movement
+	if is_on_ceiling():
+		velocity.y = -mob_definition.flap_strength * 0.5  # Positive value pushing downward
+		should_flap = false  # Don't flap while on ceiling
 	# Handle flapping for AI behaviors
-	if should_flap:
+	elif should_flap:
 		velocity.y = mob_definition.flap_strength
 		should_flap = false
 
@@ -171,7 +174,7 @@ func update_ai_behavior(delta: float) -> void:
 func update_sine_patrol_behavior(delta: float) -> void:
 	target_player = find_target_player()
 
-	if target_player and target_player.is_alive:
+	if target_player and is_instance_valid(target_player):
 		pursue_player(delta)
 	else:
 		patrol_sine_wave(delta)
@@ -217,7 +220,7 @@ func decide_ai_action() -> void:
 			decide_random_action()
 
 func decide_aggressive_action() -> void:
-	if target_player == null or not target_player.is_alive:
+	if target_player == null or not is_instance_valid(target_player):
 		current_direction = 1.0 if randf() > 0.5 else -1.0
 		return
 
@@ -230,17 +233,21 @@ func decide_aggressive_action() -> void:
 		should_flap = true
 
 func decide_defensive_action() -> void:
-	if target_player == null or not target_player.is_alive:
+	if target_player == null or not is_instance_valid(target_player):
 		current_direction = 1.0 if randf() > 0.5 else -1.0
 		return
 
 	var distance_to_player = global_position.distance_to(target_player.global_position)
 
+	# Always try to stay above the player
+	var desired_height = target_player.global_position.y - 150.0  # 150 pixels above player
+
+	if global_position.y > desired_height:
+		# Below desired height, flap to go up
+		should_flap = true
+
 	if distance_to_player < mob_definition.attack_range:
-		# Too close - maintain height advantage and back off
-		if target_player.global_position.y < global_position.y:
-			should_flap = true
-		# Occasionally reverse direction
+		# Too close - back off horizontally
 		if randf() < 0.3:
 			current_direction *= -1
 	else:
@@ -369,8 +376,8 @@ func find_target_player():
 	return null
 
 func grab_player(p_player) -> void:
-	if p_player and p_player.is_alive:
-		p_player.take_damage(999)  # Instant kill
+	if p_player and is_instance_valid(p_player):
+		p_player.queue_free()  # Instant kill
 
 func _on_bonk_detector_area_entered(_area: Area2D) -> void:
 	var fish:Fish = fish_scene.instantiate()
