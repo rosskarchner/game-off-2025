@@ -3,8 +3,11 @@ extends CharacterBody2D
 
 enum FacingDirections {Right, Left}
 
+# Collision layer constants - prevents hard-coding magic numbers
+const COLLISION_LAYER_STATIC = 1
+
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var player = get_tree().get_first_node_in_group("player")
+# Removed cached player reference - will fetch fresh each time to avoid stale references
 @onready var fish_sprite: Sprite2D = $FishSprite
 
 var fish_scene = preload("res://scenes/fish.tscn")
@@ -24,6 +27,7 @@ var movement_timer: float = 0.0
 var current_direction: float = 1.0
 var is_pursuing: bool = false
 var base_y_position: float = 0.0
+var is_dead: bool = false  # Prevent double-bonking and race conditions
 
 func _ready() -> void:
 	if not mob_definition:
@@ -52,14 +56,12 @@ func _ready() -> void:
 	# Set baseline well above spawn so mob will naturally fly upward
 	baseline_height = global_position.y - (mob_definition.height_adjustment_range * 2.0)
 
-	print("Mob baseline_height: ", baseline_height, " global_position.y: ", global_position.y, " spawn offset: ", mob_definition.baseline_height_offset)
-
 	# Start with an upward impulse to get the mob moving
 	should_flap = true
 
 func _physics_process(delta: float) -> void:
-	if not mob_definition:
-		return
+	if not mob_definition or is_dead:
+		return  # Early return if dead to prevent race conditions
 
 	time_alive += delta
 
@@ -110,8 +112,6 @@ func update_simple_behavior(delta: float) -> void:
 		# Flap strength is negative (upward), so negate it to push downward
 		velocity.y = -mob_definition.flap_strength * 0.5  # Positive value pushing downward
 		should_flap = false  # Don't flap while on ceiling
-		if time_alive < 5.0:  # Debug: only print for first 5 seconds
-			print("CEILING DETECTED - forcing downward, velocity.y: ", velocity.y)
 
 	# Update baseline_height if we've moved to a new floor level
 	if is_on_floor():
@@ -120,10 +120,6 @@ func update_simple_behavior(delta: float) -> void:
 		# Don't let baseline stay locked to spawn point - allow upward movement
 		if global_position.y < baseline_height + mob_definition.height_adjustment_range:
 			baseline_height = global_position.y - mob_definition.height_adjustment_range
-
-	# Debug: Print flap info once when on ground
-	if is_on_floor() and time_alive < 0.1:
-		print("On floor - baseline: ", baseline_height, " pos.y: ", global_position.y, " safe_range: ", safe_range, " should_flap: ", should_flap)
 
 	# Horizontal movement
 	var direction = Vector2.RIGHT if facing == FacingDirections.Right else Vector2.LEFT
@@ -257,8 +253,6 @@ func decide_defensive_action() -> void:
 	if global_position.y > desired_height:
 		# Below desired height, flap to go up
 		should_flap = true
-		if time_alive < 2.0:
-			print("Hunter flapping: mob at y=", global_position.y, " desired=", desired_height)
 
 	if distance_to_player < mob_definition.attack_range:
 		# Too close - back off horizontally
@@ -361,7 +355,15 @@ func get_safe_amplitude() -> float:
 	var available = minf(space_above, space_below)
 	return minf(available / 2.0, default_range)
 
+func get_player():
+	"""Safely get the current player instance with validity check"""
+	var player = get_tree().get_first_node_in_group("player")
+	if player and is_instance_valid(player):
+		return player
+	return null
+
 func find_target_player():
+	var player = get_player()
 	if not player:
 		return null
 
@@ -385,10 +387,7 @@ func find_target_player():
 
 	# For AI behaviors, just find nearest player in range (with line of sight check)
 	if distance <= mob_definition.detection_range:
-		var has_sight = has_line_of_sight(player)
-		if time_alive < 2.0:
-			print("Hunter: distance=", distance, " in_range=", distance <= mob_definition.detection_range, " has_los=", has_sight)
-		if has_sight:
+		if has_line_of_sight(player):
 			return player
 
 	return null
@@ -400,7 +399,7 @@ func has_line_of_sight(target: Node2D) -> bool:
 	# Ignore the mob itself and the target in the raycast
 	query.exclude = [self, target]
 	# Only check collision with STATIC layer (walls), not floors/platforms
-	query.collision_mask = 1  # Layer 1 is STATIC
+	query.collision_mask = COLLISION_LAYER_STATIC  # Use constant instead of hard-coded value
 	var result = space_state.intersect_ray(query)
 	# If no collision, we have line of sight
 	return result == null
@@ -410,6 +409,16 @@ func grab_player(p_player) -> void:
 		p_player.queue_free()  # Instant kill
 
 func _on_bonk_detector_area_entered(_area: Area2D) -> void:
+	if is_dead:
+		return  # Prevent double-bonking
+
+	is_dead = true
+	# Disable collision immediately to prevent further bonking
+	set_physics_process(false)
+	collision_layer = 0
+	collision_mask = 0
+
+	# Spawn fish at current position
 	var fish:Fish = fish_scene.instantiate()
 	fish.position = position
 	call_deferred("add_sibling", fish)

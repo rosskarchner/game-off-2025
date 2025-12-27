@@ -13,6 +13,8 @@ signal max_level_changed(new_value)
 @onready var flap_cooldown_timer: Timer = $JumpCooldownTimer
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var body_collision_shape_2d: CollisionShape2D = $BodyCollisionShape2D
+@onready var bonking_detector: Area2D = $BonkingDetector
+@onready var bonked_detector: Area2D = $BonkedDetector
 
 var max_level=1:
 	set(new_max_level):
@@ -38,9 +40,9 @@ func play_flap_sound():
 var death_scene = preload("res://scenes/player_death.tscn")
 
 ## Arcade Joust-style constants
-const FLAP_FORCE = -600.0    ## Upward thrust per flap
+const FLAP_FORCE = -700.0    ## Upward thrust per flap (increased from -600 to reduce button mashing)
 const MAX_FALL_SPEED = 600.0 ## Terminal velocity while falling
-const GRAVITY_SCALE = 1.8    ## Makes gravity feel heavier/more pressing
+const GRAVITY_SCALE = 1.3    ## Makes gravity feel heavier/more pressing (reduced from 1.8 for better feel)
 const FLAP_COOLDOWN = 0.15   ## Min time between flaps (prevents spam)
 
 ## Horizontal Movement Constants
@@ -55,6 +57,21 @@ var last_direction: float = 1.0
 var grounded: bool = true
 var near_ground: bool = true
 var moving: bool = false
+
+func _ready() -> void:
+	# Set up fixed-size bonk detection hitboxes (40px height - small, consistent)
+	# This prevents unfair deaths when the physics hitbox changes size
+	if bonking_detector:
+		for child in bonking_detector.get_children():
+			if child is CollisionShape2D:
+				if child.shape is RectangleShape2D:
+					child.shape.size.y = 40  # Fixed small size
+
+	if bonked_detector:
+		for child in bonked_detector.get_children():
+			if child is CollisionShape2D:
+				if child.shape is RectangleShape2D:
+					child.shape.size.y = 40  # Fixed small size
 
 func update_sprite():
 	if sprite.animation == "flap" and sprite.is_playing():
@@ -87,6 +104,9 @@ func _physics_process(delta: float) -> void:
 		if not Input.is_action_just_pressed("ui_accept"):
 			velocity.y = 0.0
 
+	# Passive power drain - creates urgency to collect fish
+	remaining_fish_power -= 0.5 * delta
+
 	if remaining_fish_power > 0.0:
 		# Handle flapping (thrust upward) - happens after gravity so it can override
 		if Input.is_action_just_pressed("ui_accept") and flap_cooldown_timer.is_stopped():
@@ -94,7 +114,7 @@ func _physics_process(delta: float) -> void:
 			velocity.y = FLAP_FORCE
 			flap_cooldown_timer.start()
 			sprite.play("flap")
-			remaining_fish_power -= 1.6
+			remaining_fish_power -= 1.0  # Reduced from 1.6 due to passive drain
 
 		# Horizontal Movement (Joust-style inertia)
 		var target_direction = Input.get_axis("ui_left", "ui_right")
@@ -134,6 +154,16 @@ func _on_bonked_detector_area_entered(_area: Area2D) -> void:
 	died.emit()
 
 func _finalize_death(parent: Node, death: Node) -> void:
+	# Validate parent is still valid (could be freed during scene transition)
+	if not parent or not is_instance_valid(parent):
+		push_error("Player: Parent node invalid during death, using fallback")
+		# Use root as fallback
+		get_tree().root.add_child(death)
+		if camera_2d and is_instance_valid(camera_2d):
+			camera_2d.reparent(death)
+		queue_free()
+		return
+
 	parent.add_child(death)
 	camera_2d.reparent(death)
 	queue_free()

@@ -17,7 +17,9 @@ func _on_visible_on_screen_notifier_2d_screen_entered() -> void:
 		return
 	spawned = true
 	var player:Player = get_tree().get_first_node_in_group("player")
-	var chance_of_notaduck = (float(player.current_level) /5.0 ) *.20
+	# Fixed difficulty scaling: caps at 40% instead of 96% at level 24
+	# Level 1: 2%, Level 10: 20%, Level 20: 40%, Level 30+: 40%
+	var chance_of_notaduck = min(0.4, float(player.current_level) * 0.02)
 	if randf() <= chance_of_notaduck:
 		spawn(notaduck_scene)
 	else:

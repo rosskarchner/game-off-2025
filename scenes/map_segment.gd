@@ -39,19 +39,17 @@ func _on_visible_on_screen_notifier_2d_screen_entered() -> void:
 func position_player() -> void:
 	var player = get_tree().get_first_node_in_group("player")
 	if not player:
-		print("ERROR: Player not found in group")
+		push_error("MapSegment: Player not found in group")
 		return
 	if not layout:
-		print("ERROR: Layout not set")
+		push_error("MapSegment: Layout not set")
 		return
 
 	var spawn_position = find_spawn_location(layout)
 	if spawn_position:
-		print("Found spawn position at: ", spawn_position.global_position)
 		player.global_position = spawn_position.global_position
-		print("Positioned player at: ", player.global_position)
 	else:
-		print("ERROR: PlayerSpawnLocation not found in layout")
+		push_error("MapSegment: PlayerSpawnLocation not found in layout")
 
 func find_spawn_location(node: Node) -> PlayerSpawnLocation:
 	if node is PlayerSpawnLocation:

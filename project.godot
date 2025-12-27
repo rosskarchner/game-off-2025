@@ -10,14 +10,13 @@ config_version=5
 
 [application]
 
-config/name="Game Off 2025"
+config/name="Bird Bonkers"
 run/main_scene="uid://djxncaoswwybi"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
-MobDefinitionGenerator="res://mob_definition_autoload.gd"
 BonkNoises="*res://scenes/bonk_noises.tscn"
 
 [display]
@@ -26,7 +25,7 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/mcp_server/plugin.cfg")
+enabled=PackedStringArray()
 
 [global_group]
 

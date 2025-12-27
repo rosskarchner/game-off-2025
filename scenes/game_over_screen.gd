@@ -15,4 +15,6 @@ func _process(delta: float) -> void:
 
 
 func _on_button_pressed() -> void:
-	get_tree().reload_current_scene()
+	# Use change_scene_to_file instead of reload_current_scene for proper cleanup
+	# This ensures all nodes, signals, and resources are freed properly
+	get_tree().change_scene_to_file("res://scenes/welcome.tscn")

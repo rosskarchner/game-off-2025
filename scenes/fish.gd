@@ -10,11 +10,16 @@ var already_picked_up = false
 var pickup_start_time = 0.0
 const PICKUP_DURATION = 0.25
 var wiggle_material: Material
+var landed_time: float = 0.0  # Track time since landing for extended pickup check
 
 
 func _ready() -> void:
 	# Create and apply wiggle shader material
 	var shader = load("res://scenes/fish_wiggle.gdshader")
+	if not shader:
+		push_error("Fish: Failed to load wiggle shader - fish won't wiggle")
+		return
+
 	wiggle_material = ShaderMaterial.new()
 	wiggle_material.shader = shader
 	material = wiggle_material
@@ -24,7 +29,7 @@ func _physics_process(delta: float) -> void:
 	# While being picked up, move towards the FishHole
 	if is_being_picked_up:
 		var fish_hole = get_tree().get_first_node_in_group("FishHole")
-		if fish_hole:
+		if fish_hole and is_instance_valid(fish_hole):
 			# Lerp towards FishHole position
 			var elapsed = Time.get_ticks_msec() / 1000.0 - pickup_start_time
 			var progress = min(elapsed / PICKUP_DURATION, 1.0)
@@ -32,12 +37,22 @@ func _physics_process(delta: float) -> void:
 			# Shrink and move to fish hole
 			scale = lerp(Vector2.ONE, Vector2.ZERO, progress)
 			global_position = global_position.lerp(fish_hole.global_position, progress * 0.1)
+		else:
+			# FishHole disappeared (player died?), stop pickup animation
+			is_being_picked_up = false
+
 		# Stop wiggling while being picked up
 		if wiggle_material:
 			wiggle_material.set_shader_parameter("is_wiggling", false)
 		return
 
 	if has_landed:
+		# Extended pickup check window - keep checking for 0.2s after landing
+		# This fixes the bug where fish spawning too close to player don't get picked up
+		if landed_time < 0.2:
+			landed_time += delta
+			check_player_overlap()
+
 		# Only wiggle when on the ground
 		if wiggle_material:
 			wiggle_material.set_shader_parameter("is_wiggling", is_on_floor())
@@ -52,6 +67,7 @@ func _physics_process(delta: float) -> void:
 	# Check for player overlap when fish first lands
 	if is_on_floor() and not has_landed:
 		has_landed = true
+		landed_time = 0.0
 		check_player_overlap()
 
 
@@ -70,10 +86,16 @@ func pickup_fish(player: Player) -> void:
 		return
 	already_picked_up = true
 
+	# Validate player is still valid
+	if not player or not is_instance_valid(player):
+		push_error("Fish: Player became invalid during pickup")
+		queue_free()
+		return
+
 	slurp.play()
 	var fish_hole = get_tree().get_first_node_in_group("FishHole")
-	if not fish_hole:
-		print("ERROR: FishHole not found in any group")
+	if not fish_hole or not is_instance_valid(fish_hole):
+		push_error("Fish: FishHole not found or invalid - giving power and freeing fish")
 		player.remaining_fish_power += 50
 		queue_free()
 		return

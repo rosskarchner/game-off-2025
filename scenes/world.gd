@@ -9,9 +9,11 @@ var game_over_scene = preload("res://scenes/game_over_screen.tscn")
 func load_next_segment(should_position_player=false):
 	var segment:MapSegment = segment_scene.instantiate()
 	segment.global_position = next_segment_location
-	segment.layout_loaded.connect(load_next_segment)
+	# Use CONNECT_ONE_SHOT to prevent exponential signal connection leak
+	# Each segment will only trigger load_next_segment once, not accumulate connections
+	segment.layout_loaded.connect(load_next_segment, CONNECT_ONE_SHOT)
 	if should_position_player:
-		segment.layout_loaded.connect(segment.position_player)
+		segment.layout_loaded.connect(segment.position_player, CONNECT_ONE_SHOT)
 	add_child(segment)
 	next_segment_location.y -= 648
 	
